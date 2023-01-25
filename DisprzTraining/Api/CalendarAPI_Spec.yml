@@ -1,0 +1,279 @@
+openapi: 3.0.3
+info:
+  license:
+    name: PradeepKumar
+    url: https://localhost:5169/swagger/index.html
+  title: DisprzCalendarAPI_PK
+  description: ""
+  version: v2
+
+servers:
+  - url: https://localhost:5169/swagger/index.html
+  - url: https://localhost:5169/swagger/index.html
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /v2/api/appointments:
+    get:
+      summary: Fetch All Appointments with Date/Title with offset and fetchCount
+      operationId: getAllAppointments
+      tags:
+        - Appointments
+      parameters:
+        - name: offSet
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fetchCount
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema: 
+            type: string
+            format: date-time
+        - name: searchTitle
+          in: query
+          schema:
+            type: string
+            format: string
+      responses:
+        "200":
+          description: Listed an Array of All Appointments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAppointments"
+
+    post:
+      summary: Add new Appointment
+      operationId: addNewAppointment
+      tags:
+        - Appointments
+      requestBody:
+        required: true
+        description: Schema of New Appointment
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentDTO"
+      responses:
+        "201":
+          description: New Appointment Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewAppointmentId"
+        "400":
+          description: Past Date and Time is not allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict Occured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v2/api/appointments/{Id}:
+    get:
+      summary: Fetch Appointments by ID
+      operationId: getAppointmentById
+      tags:
+        - Appointments
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          schema: 
+            type: string
+            format: uuid
+      responses: 
+        '200':
+          description: Appointment By Id
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Appointment"
+        '404':
+          description: No Appointment Found
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ErrorResponse"
+     
+    delete:
+      summary: Delete an Appointment
+      operationId: deleteAppointment
+      tags:
+        - Appointments
+      parameters:
+        - name: Id
+          in: path
+          description: Appointment Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      responses:
+        "204":
+          description: No Content
+
+        "404":
+          description: No Appointment found with the given Id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    put:
+      summary: Update an existing Appointment
+      operationId: updateAppointment
+      tags:
+        - Appointments
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      requestBody:
+        description: appointment to be updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentDTO"
+
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Appointment for past time and days are not allowed or input starttime and endtime may be same
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Appointment Not Found with given Id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict Occured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    
+
+components:
+  schemas:
+    #response appointment
+    Appointment:
+      type: object
+      properties:
+        appointmentId:
+          type: string
+          format: uuid
+        appointmentStartTime:
+          type: string
+          format: date-time
+        appointmentEndTime:
+          type: string
+          format: date-time
+        appointmentTitle:
+          type: string
+          format: string
+        appointmentDescription:
+          type: string
+          format: string
+
+    
+    # List of Appointments
+    PaginatedAppointments:
+      properties:
+        isTruncated:
+          type: boolean
+          format: boolean
+        appointments:
+          type: array
+          items:
+            type: object
+            properties:
+              appointmentId:
+                type: string
+                format: uuid
+                example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+              appointmentStartTime:
+                type: string
+                format: date-time
+              appointmentEndTime:
+                type: string
+                format: date-time
+              appointmentTitle:
+                type: string
+                format: string
+              appointmentDescription:
+                type: string
+                format: string
+    # request appointment 
+    AppointmentDTO:
+      type: object
+      properties:
+        appointmentStartTime:
+          type: string
+          format: date-time
+        appointmentEndTime:
+          type: string
+          format: date-time
+        appointmentTitle:
+          type: string
+          format: string
+        appointmentDescription:
+          type: string
+          format: string
+
+    #new appointmentId
+    NewAppointmentId:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+
+    #response for different errors
+    ErrorResponse:
+      type: object
+      properties:
+        language:
+          type: string
+          format: string
+        errorMessage:
+          type: string
+          format: string
+        errorCode:
+          type: string
+          format: string
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: Access-Token
