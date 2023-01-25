@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj": {}
+    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj": {}
   },
   "projects": {
-    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj": {
+    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj",
+        "projectUniqueName": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj",
         "projectName": "DisprzTraining.Tests",
-        "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj",
+        "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining.Tests\\DisprzTraining.Tests.csproj",
         "packagesPath": "C:\\Users\\pradeep.g_disprz\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining.Tests\\obj\\",
+        "outputPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pradeep.g_disprz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,8 +26,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj": {
-                "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj"
+              "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj": {
+                "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj"
               }
             }
           }
@@ -99,14 +99,14 @@
         }
       }
     },
-    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj": {
+    "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj",
+        "projectUniqueName": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj",
         "projectName": "DisprzTraining",
-        "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj",
+        "projectPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\DisprzTraining.csproj",
         "packagesPath": "C:\\Users\\pradeep.g_disprz\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_Check_api\\DisprzTraining-main\\DisprzTraining\\obj\\",
+        "outputPath": "c:\\Users\\pradeep.g_disprz\\Desktop\\final_check_api\\DisprzTraining-main\\DisprzTraining\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pradeep.g_disprz\\AppData\\Roaming\\NuGet\\NuGet.Config"
