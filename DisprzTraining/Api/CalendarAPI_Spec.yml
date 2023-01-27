@@ -14,7 +14,7 @@ security:
   - ApiKeyAuth: []
 
 paths:
-  /v2/api/appointments:
+  /v1/api/appointments:
     get:
       summary: Fetch All Appointments with Date/Title with offset and fetchCount
       operationId: getAllAppointments
@@ -88,7 +88,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
-  /v2/api/appointments/{Id}:
+  /v1/api/appointments/{Id}:
     get:
       summary: Fetch Appointments by ID
       operationId: getAppointmentById
