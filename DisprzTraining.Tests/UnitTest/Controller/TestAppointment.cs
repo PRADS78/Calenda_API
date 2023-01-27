@@ -138,7 +138,7 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime));
+            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime));
 
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.AddAppointment(MockAppointment);
@@ -160,7 +160,7 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.SameTiming));
+            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.SameTiming));
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.AddAppointment(MockAppointment);
 
@@ -180,7 +180,7 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.PastTiming));
+            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.PastTiming));
 
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.AddAppointment(MockAppointment);
@@ -188,6 +188,28 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             //Assert
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode?)result.StatusCode);
             Assert.Equal(result.Value, AppointmentErrorResponse.PastTiming);
+        }
+
+
+        [Fact]
+        public void AddAppointment_Returns_400_BadRequest_On_Input_Time_Not_Within_Range()
+        {
+            //Arrange  
+            var MockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(4),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "worldCup Discussion",
+                appointmentDescription = "will messi win the WC"
+            };
+            MockServiceBL.Setup(service => service.AddAppointment(It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.TimeRange));
+
+            //Act
+            var result = (BadRequestObjectResult)systemUnderTest.AddAppointment(MockAppointment);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode?)result.StatusCode);
+            Assert.Equal(result.Value, AppointmentErrorResponse.TimeRange);
         }
 
         //////////////              //Add new appointment //                 ////////////////
@@ -249,7 +271,7 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime));
+            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime));
 
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.UpdateAppointment(MockGuid, MockAppointment);
@@ -258,6 +280,29 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode?)result.StatusCode);
             Assert.Equal(result.Value, AppointmentErrorResponse.EndTimeLessThanStartTime);
         }
+
+        [Fact]
+        public void UpdateExistingAppointment_Returns_400_BadRequest_On_Input_Time_Not_Within_Range()
+        {
+            //Arrange  
+            var MockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(4),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "worldCup Discussion",
+                appointmentDescription = "will messi win the WC"
+            };
+            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.TimeRange));
+
+            //Act
+            var result = (BadRequestObjectResult)systemUnderTest.UpdateAppointment(MockGuid, MockAppointment);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.BadRequest, (HttpStatusCode?)result.StatusCode);
+            Assert.Equal(result.Value, AppointmentErrorResponse.TimeRange);
+        }
+
+
 
         [Fact]
         public void UpdateExistingAppointment_Returns_400_BadRequest_On_Same_StartTime_And_EndTime()
@@ -270,8 +315,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.SameTiming));
-            
+            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.SameTiming));
+
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.UpdateAppointment(MockGuid, MockAppointment);
 
@@ -291,7 +336,7 @@ namespace DisprzTraining.Tests.UnitTests.Controller
                 appointmentTitle = "worldCup Discussion",
                 appointmentDescription = "will messi win the WC"
             };
-            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputErrorException(AppointmentErrorResponse.PastTiming));
+            MockServiceBL.Setup(service => service.UpdateAppointment(It.IsAny<Guid>(), It.IsAny<AppointmentDTO>())).Throws(new InputTimeErrorException(AppointmentErrorResponse.PastTiming));
 
             //Act
             var result = (BadRequestObjectResult)systemUnderTest.UpdateAppointment(MockGuid, MockAppointment);
@@ -318,7 +363,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), null, null, null)).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, null, null);
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, null, null);
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=null,endDate=null,searchTitle=null});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -337,7 +383,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), null, null, null)).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(5, 5, null, null, null);
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(5, 5, null, null, null);
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=5,fetchCount=5,startDate=null,endDate=null,searchTitle=null});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -356,7 +403,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>())).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), "worldCup Discussion");
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), "worldCup Discussion");
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=new DateTime(2023, 01, 06),endDate=new DateTime(2023, 01, 08),searchTitle="worldCup Discussion"});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -375,7 +423,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>())).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), "worldCup Discussion");
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), "worldCup Discussion");
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=new DateTime(2023, 01, 06),endDate=new DateTime(2023, 01, 08),searchTitle="worldCup Discussion"});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -393,7 +442,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), null, It.IsAny<string>())).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), null, "worldCup Discussion");
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=new DateTime(2023, 01, 08),endDate=null,searchTitle="worldCup Discussion"});
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), null, "worldCup Discussion");
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -413,7 +463,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             var systemUnderTest = new AppointmentsController(MockServiceBL.Object);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, new DateTime(2023, 01, 08), "worldCup Discussion");
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=null,endDate=new DateTime(2023, 01, 08),searchTitle="worldCup Discussion"});
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, new DateTime(2023, 01, 08), "worldCup Discussion");
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -432,7 +483,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), null, null)).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), null, null);
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), null, null);
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=new DateTime(2023, 01, 08),endDate=null,searchTitle=null});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -451,7 +503,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), null, It.IsAny<DateTime>(), null)).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, new DateTime(2023, 01, 08), null);
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, new DateTime(2023, 01, 08), null);
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=null,endDate=new DateTime(2023, 01, 08),searchTitle=null});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -470,7 +523,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), null)).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), null);
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, new DateTime(2023, 01, 06), new DateTime(2023, 01, 08), null);
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=new DateTime(2023, 01, 06),endDate=new DateTime(2023, 01, 08),searchTitle=null});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert
@@ -489,7 +543,8 @@ namespace DisprzTraining.Tests.UnitTests.Controller
             MockServiceBL.Setup(service => service.GetAllAppointments(It.IsAny<int>(), It.IsAny<int>(), null, null, It.IsAny<string>())).Returns(expectedResult);
 
             //Act
-            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, null, "worldCup Discussion");
+            // var result = (OkObjectResult)systemUnderTest.GetAllAppointments(0, 5, null, null, "worldCup Discussion");
+            var result = (OkObjectResult)systemUnderTest.GetAllAppointments(new GetAppointmentQueryParameters(){offSet=0,fetchCount=5,startDate=null,endDate=null,searchTitle="worldCup Discussion"});
             PaginatedAppointments? getValue = (PaginatedAppointments?)result.Value;
 
             //Assert

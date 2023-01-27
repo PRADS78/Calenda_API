@@ -5,12 +5,8 @@ namespace DisprzTraining.DataAccess
     public class AppointmentDAL : IAppointmentDAL
     {
 
-
         private static List<Appointment> _userAppointments = new();
-
         PaginatedAppointments appointmentsFound = new PaginatedAppointments();
-
-
 
 
         public PaginatedAppointments GetAllAppointments(int offSet, int fetchCount, DateTime? startDate, DateTime? endDate, string? searchTitle)
@@ -23,7 +19,9 @@ namespace DisprzTraining.DataAccess
                                                                                     && appointment.appointmentEndTime.Date <= endDate.Value)
                                                                                     )
                                             )
-                                            && ((String.IsNullOrWhiteSpace(searchTitle))||(appointment.appointmentTitle.ToLower().Contains(searchTitle.ToLower())))
+                                            && ((String.IsNullOrWhiteSpace(searchTitle))
+                                                    ||(appointment.appointmentTitle!=null
+                                                            &&appointment.appointmentTitle.ToLower().Contains(searchTitle.ToLower())))
                                             )
                                       orderby (appointment.appointmentStartTime)
                                       select appointment).ToList();
@@ -41,13 +39,42 @@ namespace DisprzTraining.DataAccess
             return appointmentsFound;
         }
 
+        private int AppointmentBinarySearch(Guid searchId)
+        {
+                int start=0,end=_userAppointments.Count();
+                int indexFound=-1;
+                while(start<end){
+                    int mid=(start+end)/2;
+                    var idMatched=searchId.CompareTo(_userAppointments[mid].appointmentId);
+                    if(idMatched==0){
+                        indexFound= mid;
+                        break;
+                    }
+                    else if(idMatched>0){
+                        start=mid+1;
+                    }
+                    else{
+                        end=mid;
+                    }
+                }
+                return indexFound;
+              
+        }
 
         public Appointment? GetAppointmentById(Guid appointmentId)
         {
-            var appointmentById = (from appointment in _userAppointments
-                                   where appointment.appointmentId == appointmentId
-                                   select appointment).FirstOrDefault();
-            return appointmentById;
+            var appointmentIndex=-1;
+            if(_userAppointments.Any())
+            {
+                appointmentIndex=AppointmentBinarySearch(appointmentId);
+            }
+            return (appointmentIndex!=-1? _userAppointments[appointmentIndex]:null);
+        }
+       
+        public bool DeleteAppointment(Guid appointmentId)
+        {
+            var appointmentMatched = GetAppointmentById(appointmentId);
+            return (appointmentMatched != null ? _userAppointments.Remove(appointmentMatched) : false);
         }
 
 
@@ -58,6 +85,7 @@ namespace DisprzTraining.DataAccess
                                            select appointment).ToList();
             return (CheckAppointmentPresent.Any() ? false : true);
         }
+
 
         public NewAppointmentId? AddAppointment(AppointmentDTO newAppointment)
         {
@@ -75,15 +103,10 @@ namespace DisprzTraining.DataAccess
                     appointmentDescription = newAppointment.appointmentDescription
                 };
                 _userAppointments.Add(appointmentToBeAdded);
+                _userAppointments=_userAppointments.OrderBy(appointment=>appointment.appointmentId).ToList();
                 return new NewAppointmentId() { Id = appointmentToBeAdded.appointmentId };
             }
             return null;
-        }
-
-        public bool DeleteAppointment(Guid appointmentId)
-        {
-            var appointmentMatched = GetAppointmentById(appointmentId);
-            return (appointmentMatched != null ? _userAppointments.Remove(appointmentMatched) : false);
         }
 
         public bool? UpdateAppointment(Guid appointmentId, AppointmentDTO updateAppointment)
@@ -113,6 +136,7 @@ namespace DisprzTraining.DataAccess
                         appointmentDescription = updateAppointment.appointmentDescription
                     };
                     _userAppointments.Add(appointmentToBeUpdated);
+                    _userAppointments=_userAppointments.OrderBy(appointment=>appointment.appointmentId).ToList();
                     return true;
                 }
                 return false;
@@ -120,6 +144,28 @@ namespace DisprzTraining.DataAccess
 
         }
     }
-
 }
+
+// BinarySearch 
+            // if(EventData.meetingData.ContainsKey(date)){
+            //     int start=0;
+            //     int end=EventData.meetingData[date].Count;
+            //     while(start<end){
+            //         int mid=(start+end)/2;
+            //         if(EventData.meetingData[date][mid].StartTime==startTime){
+            //             EventData.meetingData[date].Remove(EventData.meetingData[date][mid]);
+            //             if(EventData.meetingData[date].Count==0){
+            //                 EventData.meetingData.Remove(date);
+            //             }
+            //             return true;
+            //         }
+            //         else if(EventData.meetingData[date][mid].StartTime>startTime){
+            //             end=mid;
+            //         }
+            //         else{
+            //             start=mid;
+            //         }
+            //     }
+            // }
+            // return false;    
 

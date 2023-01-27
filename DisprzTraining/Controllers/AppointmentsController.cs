@@ -31,9 +31,13 @@ namespace DisprzTraining.Controllers
         //- GET /api/appointments/
         [HttpGet, Route("v1/api/appointments")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedAppointments))]
-        public ActionResult GetAllAppointments([Required] int offSet, [Required] int fetchCount , DateTime? startDate = null, DateTime? endDate = null, string? searchTitle = null)
+        public IActionResult GetAllAppointments([FromQuery] GetAppointmentQueryParameters inputGetData)
         {
-            var appointments = _appointmentBL.GetAllAppointments(offSet, fetchCount, startDate, endDate, searchTitle);
+            var appointments = _appointmentBL.GetAllAppointments(inputGetData.offSet, 
+                                                                inputGetData.fetchCount, 
+                                                                inputGetData.startDate, 
+                                                                inputGetData.endDate, 
+                                                                inputGetData.searchTitle);
             return Ok(appointments);
         }
 
@@ -52,7 +56,7 @@ namespace DisprzTraining.Controllers
         //get appointment by Id
         [HttpGet, Route("v1/api/appointments/{Id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Appointment))]
-        public ActionResult GetappointmentById([FromRoute] Guid Id)
+        public IActionResult GetappointmentById([FromRoute] Guid Id)
         {
             var appointmentById = _appointmentBL.GetAppointmentById(Id);
             return appointmentById != null ? Ok(appointmentById) : NotFound(AppointmentErrorResponse.DataNotFound);
@@ -81,16 +85,16 @@ namespace DisprzTraining.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(NewAppointmentId))]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ErrorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
-        public ActionResult AddAppointment([FromBody] AppointmentDTO newAppointment)
+        public IActionResult AddAppointment([FromBody] AppointmentDTO newAppointment)
         {
             try
             {
-            var createdAppointmentId = _appointmentBL.AddAppointment(newAppointment);
-            return (createdAppointmentId != null) ? Created("~v1/api/apiappointments", createdAppointmentId) : Conflict(AppointmentErrorResponse.ConflictResponse);
+                var createdAppointmentId = _appointmentBL.AddAppointment(newAppointment);
+                return (createdAppointmentId != null) ? Created("~v1/api/apiappointments", createdAppointmentId) : Conflict(AppointmentErrorResponse.ConflictResponse);
             }
-            catch(InputErrorException ex)
+            catch (InputTimeErrorException ex)
             {
-                return BadRequest(ex.InputError);
+                return BadRequest(ex.InputTimeError);
             }
         }
 
@@ -110,7 +114,7 @@ namespace DisprzTraining.Controllers
         [HttpDelete, Route("v1/api/appointments/{Id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
-        public ActionResult DeleteAppointment([FromRoute] Guid Id)
+        public IActionResult DeleteAppointment([FromRoute] Guid Id)
         {
             var isDeleted = _appointmentBL.DeleteAppointment(Id);
             return (isDeleted) ? NoContent() : NotFound(AppointmentErrorResponse.DataNotFound);
@@ -141,16 +145,16 @@ namespace DisprzTraining.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ErrorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
-        public ActionResult UpdateAppointment([FromRoute] Guid Id, [FromBody] AppointmentDTO updateAppointment)
-        {          
+        public IActionResult UpdateAppointment([FromRoute] Guid Id, [FromBody] AppointmentDTO updateAppointment)
+        {
             try
             {
                 bool? noConflict = _appointmentBL.UpdateAppointment(Id, updateAppointment);
                 return (noConflict != null) ? (noConflict == true ? NoContent() : Conflict(AppointmentErrorResponse.ConflictResponse)) : NotFound(AppointmentErrorResponse.DataNotFound);
             }
-            catch(InputErrorException ex)
+            catch (InputTimeErrorException ex)
             {
-                return BadRequest(ex.InputError);
+                return BadRequest(ex.InputTimeError);
             }
         }
     }

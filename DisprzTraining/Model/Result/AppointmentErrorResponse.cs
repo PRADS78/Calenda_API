@@ -22,7 +22,7 @@ namespace DisprzTraining.Model.Result
             errorCode = "AC_003"
         };
 
-        public static ErrorResponse InputTimeNull= new ErrorResponse()
+        public static ErrorResponse InputTimeNull = new ErrorResponse()
         {
             language = "en",
             errorMessage = "Appointment input time should not be null",
@@ -40,6 +40,13 @@ namespace DisprzTraining.Model.Result
             language = "en",
             errorMessage = "No Appointment found with the given Id",
             errorCode = "AC_006"
+        };
+
+        public static ErrorResponse TimeRange = new ErrorResponse()
+        {
+            language = "en",
+            errorMessage = "StartTime and End Time should fall within Current Date",
+            errorCode = "AC_007"
         };
     }
 }

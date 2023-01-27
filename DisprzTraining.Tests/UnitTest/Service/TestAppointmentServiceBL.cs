@@ -110,8 +110,26 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.EndTimeLessThanStartTime, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.EndTimeLessThanStartTime, exception.InputTimeError);
+        }
+
+        [Fact]
+        public void AddAppointment_Returns_BadRequest_On_Input_Not_Within_Range()
+        {
+            //Arrange
+            var mockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(5),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "add returnd bad req",
+                appointmentDescription = "add returnd bad req"
+            };
+            //Act
+
+            //Assert
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.TimeRange, exception.InputTimeError);
         }
 
         [Fact]
@@ -128,8 +146,8 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.SameTiming, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.SameTiming, exception.InputTimeError);
         }
 
         [Fact]
@@ -146,8 +164,8 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.PastTiming, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.AddAppointment(mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.PastTiming, exception.InputTimeError);
         }
 
         [Fact]
@@ -245,8 +263,26 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid,mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.EndTimeLessThanStartTime, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid, mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.EndTimeLessThanStartTime, exception.InputTimeError);
+        }
+
+        [Fact]
+        public void UpdateAppointment_Returns_BadRequest_On_Input_Time_Not_Within_Range()
+        {
+            //Arrange
+            var mockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(5),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "add returnd bad req",
+                appointmentDescription = "add returnd bad req"
+            };
+            //Act
+
+            //Assert
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid, mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.TimeRange, exception.InputTimeError);
         }
 
         [Fact]
@@ -263,8 +299,8 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid,mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.SameTiming, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid, mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.SameTiming, exception.InputTimeError);
         }
 
         [Fact]
@@ -281,8 +317,8 @@ namespace DisprzTraining.Tests.UnitTests.Service
             //Act
 
             //Assert
-            var exception = Assert.Throws<InputErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid,mockAppointment));
-            Assert.Equal(AppointmentErrorResponse.PastTiming, exception.InputError);
+            var exception = Assert.Throws<InputTimeErrorException>(() => serviceUnderTest.UpdateAppointment(MockGuid, mockAppointment));
+            Assert.Equal(AppointmentErrorResponse.PastTiming, exception.InputTimeError);
         }
 
         //////////////              //update Existing Appointment //                 ////////////////

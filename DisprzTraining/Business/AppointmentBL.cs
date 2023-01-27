@@ -2,6 +2,7 @@ using DisprzTraining.CustomException;
 using DisprzTraining.DataAccess;
 using DisprzTraining.Model;
 using DisprzTraining.Model.Result;
+using DisprzTraining.Extensions;
 
 namespace DisprzTraining.Business
 {
@@ -31,9 +32,11 @@ namespace DisprzTraining.Business
 
         public NewAppointmentId? AddAppointment(AppointmentDTO newAppointment)
         {
-            if (newAppointment.appointmentEndTime < newAppointment.appointmentStartTime) throw new InputErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime);
-            else if (newAppointment.appointmentEndTime == newAppointment.appointmentStartTime) throw new InputErrorException(AppointmentErrorResponse.SameTiming);
-            else if (newAppointment.appointmentStartTime < DateTime.Now) throw new InputErrorException(AppointmentErrorResponse.PastTiming);
+            if (newAppointment.appointmentEndTime < newAppointment.appointmentStartTime) throw new InputTimeErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime);
+            else if (newAppointment.appointmentEndTime == newAppointment.appointmentStartTime) throw new InputTimeErrorException(AppointmentErrorResponse.SameTiming);
+            else if (newAppointment.appointmentStartTime < DateTime.Now) throw new InputTimeErrorException(AppointmentErrorResponse.PastTiming);
+            else if (newAppointment.appointmentEndTime > DateTimeExtension.GetEndOfDay(newAppointment.appointmentStartTime.Date)) throw new InputTimeErrorException(AppointmentErrorResponse.TimeRange);
+
             else return _appointmentDAL.AddAppointment(newAppointment);
         }
 
@@ -46,12 +49,14 @@ namespace DisprzTraining.Business
         //update appointment
         public bool? UpdateAppointment(Guid appointmentId, AppointmentDTO updateAppointment)
         {
-            if (updateAppointment.appointmentEndTime < updateAppointment.appointmentStartTime) throw new InputErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime);
-            else if (updateAppointment.appointmentEndTime == updateAppointment.appointmentStartTime) throw new InputErrorException(AppointmentErrorResponse.SameTiming);            
-            else if (updateAppointment.appointmentStartTime < DateTime.Now) throw new InputErrorException(AppointmentErrorResponse.PastTiming);
-            else{
-            bool? isUpdated = _appointmentDAL.UpdateAppointment(appointmentId, updateAppointment);
-            return isUpdated != null ? (isUpdated == true ? true : false) : null;
+            if (updateAppointment.appointmentEndTime < updateAppointment.appointmentStartTime) throw new InputTimeErrorException(AppointmentErrorResponse.EndTimeLessThanStartTime);
+            else if (updateAppointment.appointmentEndTime == updateAppointment.appointmentStartTime) throw new InputTimeErrorException(AppointmentErrorResponse.SameTiming);
+            else if (updateAppointment.appointmentStartTime < DateTime.Now) throw new InputTimeErrorException(AppointmentErrorResponse.PastTiming);
+            else if (updateAppointment.appointmentEndTime > DateTimeExtension.GetEndOfDay(updateAppointment.appointmentStartTime.Date)) throw new InputTimeErrorException(AppointmentErrorResponse.TimeRange);
+            else
+            {
+                bool? isUpdated = _appointmentDAL.UpdateAppointment(appointmentId, updateAppointment);
+                return isUpdated != null ? (isUpdated == true ? true : false) : null;
             }
         }
     }

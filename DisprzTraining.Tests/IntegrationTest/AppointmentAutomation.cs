@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace DisprzTraining.Tests.IntegrationTest
 {
-    public class AppointmentAutomation:IClassFixture<WebApplicationFactory<Program>>
+    public class AppointmentAutomation : IClassFixture<WebApplicationFactory<Program>>
     {
 
         private readonly WebApplicationFactory<Program> _factory;
@@ -132,7 +132,30 @@ namespace DisprzTraining.Tests.IntegrationTest
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal(AppointmentErrorResponse.PastTiming.errorCode, errorResponse?.errorCode);
         }
-        //failing
+
+        [Fact]
+        public async Task CreateAppointment_Return_BadReques_For_InputTime_Not_Within_Range()
+        {
+            //Arrange
+            var client = _factory.CreateClient();
+            var mockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(5),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "add returnd bad req",
+                appointmentDescription = "add returnd bad req"
+            };
+
+            //Act
+            var response = await client.PostAsync(URL, SerializeInput(mockAppointment));
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(AppointmentErrorResponse.TimeRange.errorCode, errorResponse?.errorCode);
+        }
+
 
 
         [Fact]
@@ -252,7 +275,31 @@ namespace DisprzTraining.Tests.IntegrationTest
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal(AppointmentErrorResponse.PastTiming.errorCode, errorResponse?.errorCode);
         }
-        //failing
+
+        [Fact]
+        public async Task UpdateAppointment_Return_BadRequest_For_Input_Not_Within_Range()
+        {
+            //Arrange
+            var client = _factory.CreateClient();
+            var mockAppointment = new AppointmentDTO()
+            {
+                appointmentStartTime = DateTime.Now.AddHours(5),
+                appointmentEndTime = DateTime.Now.AddHours(18),
+                appointmentTitle = "worldCup Discussion",
+                appointmentDescription = "will messi win the WC"
+            };
+            var MockId = Guid.NewGuid();
+
+            //Act
+            var response = await client.PutAsync($"{URL}/{MockId}", SerializeInput(mockAppointment));
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(AppointmentErrorResponse.TimeRange.errorCode, errorResponse?.errorCode);
+        }
+
 
         [Fact]
         public async Task UpdateAppointment_Return_BadRequest_For_EndTime_Less_Than_StartTime()
@@ -375,12 +422,12 @@ namespace DisprzTraining.Tests.IntegrationTest
             //Arrange
             var client = _factory.CreateClient();
             var MockID = Guid.NewGuid();
-            
+
             //Act
             var deleteResponse = await client.DeleteAsync($"{URL}/{MockID}");
             var responseContent = await deleteResponse.Content.ReadAsStringAsync();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseContent);
-            
+
             //Assert
             Assert.Equal(HttpStatusCode.NotFound, deleteResponse.StatusCode);
             Assert.Equal(AppointmentErrorResponse.DataNotFound.errorCode, errorResponse?.errorCode);
@@ -565,7 +612,7 @@ namespace DisprzTraining.Tests.IntegrationTest
 
             await Dispose();
         }
-        
+
         //////////// get appointment ////////////////
 
 

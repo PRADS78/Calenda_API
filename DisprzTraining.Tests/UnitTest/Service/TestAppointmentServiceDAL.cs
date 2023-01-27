@@ -84,25 +84,35 @@ namespace DisprzTraining.Tests.UnitTests.Service
         public void GetAppointment_By_ID_Returns_Appointment()
         {
             //Arrange
-            var MockAppointment = new AppointmentDTO()
+            var MockAppointment1 = new AppointmentDTO()
             {
                 appointmentStartTime = new DateTime(2021, 10, 17, 10, 10, 10),
                 appointmentEndTime = new DateTime(2021, 10, 17, 12, 10, 10),
                 appointmentTitle = "getById returns Appointment",
                 appointmentDescription = "getById returns Appointment"
             };
+            var MockAppointment2 = new AppointmentDTO()
+            {
+                appointmentStartTime = new DateTime(2021, 10, 17, 13, 10, 10),
+                appointmentEndTime = new DateTime(2021, 10, 17, 14, 10, 10),
+                appointmentTitle = "getById returns Appointment",
+                appointmentDescription = "getById returns Appointment"
+            };
 
             //Act
-            var result = serviceUnderTest.AddAppointment(MockAppointment);
-            if (result != null)
+            var result1 = serviceUnderTest.AddAppointment(MockAppointment1);
+            var result2 = serviceUnderTest.AddAppointment(MockAppointment2);
+            if (result1 != null&&result2!=null)
             {
-                var getAppointment = serviceUnderTest.GetAppointmentById(result.Id);
-                var appointmentDeleted = serviceUnderTest.DeleteAppointment(result.Id);
+                var getAppointment = serviceUnderTest.GetAppointmentById(result1.Id);
+                var appointmentDeleted1 = serviceUnderTest.DeleteAppointment(result1.Id);
+                var appointmentDeleted2 = serviceUnderTest.DeleteAppointment(result2.Id);
 
                 //Assert
                 Assert.IsType<Appointment>(getAppointment);
-                Assert.Equal(result.Id, getAppointment.appointmentId);
-                Assert.True(appointmentDeleted);
+                Assert.Equal(result1.Id, getAppointment.appointmentId);
+                Assert.True(appointmentDeleted1);
+                Assert.True(appointmentDeleted2);
             }
             else
                 Assert.Fail("Get Appointment By Id Appointment Failed");
