@@ -58,7 +58,6 @@ namespace DisprzTraining.DataAccess
                     }
                 }
                 return indexFound;
-              
         }
 
         public Appointment? GetAppointmentById(Guid appointmentId)
@@ -145,27 +144,3 @@ namespace DisprzTraining.DataAccess
         }
     }
 }
-
-// BinarySearch 
-            // if(EventData.meetingData.ContainsKey(date)){
-            //     int start=0;
-            //     int end=EventData.meetingData[date].Count;
-            //     while(start<end){
-            //         int mid=(start+end)/2;
-            //         if(EventData.meetingData[date][mid].StartTime==startTime){
-            //             EventData.meetingData[date].Remove(EventData.meetingData[date][mid]);
-            //             if(EventData.meetingData[date].Count==0){
-            //                 EventData.meetingData.Remove(date);
-            //             }
-            //             return true;
-            //         }
-            //         else if(EventData.meetingData[date][mid].StartTime>startTime){
-            //             end=mid;
-            //         }
-            //         else{
-            //             start=mid;
-            //         }
-            //     }
-            // }
-            // return false;    
-
