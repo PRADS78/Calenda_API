@@ -5,7 +5,7 @@ info:
     url: https://localhost:5169/swagger/index.html
   title: DisprzCalendarAPI_PK
   description: ""
-  version: v2
+  version: v1
 
 servers:
   - url: https://localhost:5169/swagger/index.html

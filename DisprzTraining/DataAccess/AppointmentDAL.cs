@@ -39,7 +39,7 @@ namespace DisprzTraining.DataAccess
             return appointmentsFound;
         }
 
-        private int AppointmentBinarySearch(Guid searchId)
+        private int _AppointmentBinarySearch(Guid searchId)
         {
                 int start=0,end=_userAppointments.Count();
                 int indexFound=-1;
@@ -65,7 +65,7 @@ namespace DisprzTraining.DataAccess
             var appointmentIndex=-1;
             if(_userAppointments.Any())
             {
-                appointmentIndex=AppointmentBinarySearch(appointmentId);
+                appointmentIndex=_AppointmentBinarySearch(appointmentId);
             }
             return (appointmentIndex!=-1? _userAppointments[appointmentIndex]:null);
         }
